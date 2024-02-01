@@ -639,12 +639,17 @@ function build_boot_images() {
           AVB_BOOT_PARTITION_NAME=${BOOT_IMAGE_FILENAME%%.*}
         fi
 
-        avbtool add_hash_footer \
-            --partition_name ${AVB_BOOT_PARTITION_NAME} \
-            --partition_size ${AVB_BOOT_PARTITION_SIZE} \
-            --image "${DIST_DIR}/${BOOT_IMAGE_FILENAME}" \
-            --algorithm ${AVB_BOOT_ALGORITHM} \
-            --key ${AVB_BOOT_KEY}
+        avb_sign_args=("add_hash_footer")
+        avb_sign_args+=("--partition_name" "${AVB_BOOT_PARTITION_NAME}")
+        avb_sign_args+=("--partition_size" "${AVB_BOOT_PARTITION_SIZE}")
+        avb_sign_args+=("--image" "${DIST_DIR}/${BOOT_IMAGE_FILENAME}")
+        avb_sign_args+=("--algorithm" "${AVB_BOOT_ALGORITHM}")
+        avb_sign_args+=("--key" "${AVB_BOOT_KEY}")
+
+        for prop in "${AVB_SIGN_BOOT_IMG_PROP[@]}"; do
+          avb_sign_args+=("--prop" "${prop}")
+        done
+        avbtool "${avb_sign_args[@]}"
       else
         echo "Missing the AVB_* flags. Failed to sign the boot image" 1>&2
         exit 1

@@ -282,6 +282,10 @@
 #       https://android.googlesource.com/platform/external/avb/+/refs/heads/master/libavb/avb_crypto.h
 #     - AVB_BOOT_PARTITION_NAME=<name of the boot partition>
 #       (defaults to BOOT_IMAGE_FILENAME without extension; by default, "boot")
+#     Below are the optional flags that may be defined when AVB_SIGN_BOOT_IMG
+#     is defined:
+#     - AVB_SIGN_BOOT_IMG_PROP=1
+#       Appends os_version and security_patch props to avbtool args.
 #
 #   BUILD_INITRAMFS
 #     if set to "1", build a ramdisk containing all .ko files and resulting
