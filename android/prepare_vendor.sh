@@ -295,19 +295,20 @@ if [ "${COPY_NEEDED}" == "1" ]; then
     find ${ANDROID_KP_OUT_DIR}/dist/ -name \*.ko > ${first_stage_kos}
   fi
 
-  rm -f ${ANDROID_KERNEL_OUT}/*.ko ${ANDROID_KERNEL_OUT}/modules.*
+  rm -f ${ANDROID_KERNEL_OUT}/vendor_ramdisk/*.ko ${ANDROID_KERNEL_OUT}/vendor_ramdisk/modules.*
   if [ -s "${first_stage_kos}" ]; then
-    cp $(cat ${first_stage_kos}) ${ANDROID_KERNEL_OUT}/
+    mkdir -p ${ANDROID_KERNEL_OUT}/vendor_ramdisk
+    cp $(cat ${first_stage_kos}) ${ANDROID_KERNEL_OUT}/vendor_ramdisk
   else
     echo "  WARNING!! No first stage modules found"
   fi
 
   if [ -e ${ANDROID_KP_OUT_DIR}/dist/modules.blocklist ]; then
-    cp ${ANDROID_KP_OUT_DIR}/dist/modules.blocklist ${ANDROID_KERNEL_OUT}/modules.blocklist
+    cp ${ANDROID_KP_OUT_DIR}/dist/modules.blocklist ${ANDROID_KERNEL_OUT}/vendor_ramdisk/modules.blocklist
   fi
 
   if [ -e ${ANDROID_KP_OUT_DIR}/dist/modules.load ]; then
-    cp ${ANDROID_KP_OUT_DIR}/dist/modules.load ${ANDROID_KERNEL_OUT}/modules.load
+    cp ${ANDROID_KP_OUT_DIR}/dist/modules.load ${ANDROID_KERNEL_OUT}/vendor_ramdisk/modules.load
   fi
 
   system_dlkm_kos=$(mktemp)
