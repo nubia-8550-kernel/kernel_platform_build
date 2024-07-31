@@ -161,6 +161,13 @@ case "${KERNEL_TARGET}" in
     ;;
 esac
 
+MAKE_ARGS=
+
+if [ -n "${TARGET_PRODUCT_NAME}" ]; then
+  echo Building for ${TARGET_PRODUCT_NAME}
+  MAKE_ARGS="ZTE_BOARD_NAME=${TARGET_PRODUCT_NAME}"
+fi
+
 ################################################################################
 # Create a build config used for this run of prepare_vendor
 # Temporary KP output directory so as to not accidentally touch a prebuilt KP output folder
@@ -227,7 +234,7 @@ if [ "${RECOMPILE_KERNEL}" == "1" ]; then
 
   (
     cd ${ROOT_DIR}
-    SKIP_MRPROPER=1 OUT_DIR=${ANDROID_KP_OUT_DIR} ./build/build.sh
+    SKIP_MRPROPER=1 OUT_DIR=${ANDROID_KP_OUT_DIR} ./build/build.sh ${MAKE_ARGS}
   )
 
   COPY_NEEDED=1
@@ -484,7 +491,7 @@ if [ -n "${ANDROID_PRODUCT_OUT}" ] && [ -n "${ANDROID_BUILD_TOP}" ]; then
       OUT_DIR=${ANDROID_EXT_MODULES_OUT} \
       EXT_MODULES="${KP_TO_ANDROID}/${project}" \
       KERNEL_KIT=${ANDROID_KERNEL_OUT} \
-      ./build/build_module.sh dtbs
+      ./build/build_module.sh dtbs ${MAKE_ARGS}
       set +x
     )
   done
